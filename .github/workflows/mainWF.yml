@@ -29,5 +29,9 @@ jobs:
         run: make
         
       - name: Run tests
-        run: make tests
+        run: |
+          pushd unitTest
+          make tests 
+          ./tests
+          popd
         
