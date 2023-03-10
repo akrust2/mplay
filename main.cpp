@@ -10,8 +10,7 @@
 int main(int argc, char *argv[]){
 
     try{
-        mplay::PlayList playList{mplay::Track("track1", "codec1", 10), mplay::Track("track2", "codec2", 100)};
-
+        
         mplay::ActionsHandler actions;
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::AddTrack(playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::PrintPlayList(playList)));
