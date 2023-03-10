@@ -1,6 +1,5 @@
 #include "PlayList.h"
 #include "Track.h"
-#include "Player.h"
 #include "ActionsHandler.h"
 #include "Exception.h"
 #include "AddTrack.h"
