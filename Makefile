@@ -1,5 +1,5 @@
 CXX=g++
-CXXFLAGS=-W -Wall -std=c++2a -fconcepts
+CXXFLAGS=-W -Wall -std=c++2a -fconcepts -g -ggdb
 LDFLAGS=-lstdc++ 
 EXEC=mplay
 SRC= $(wildcard *.cpp)

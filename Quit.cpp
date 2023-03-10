@@ -1,7 +1,6 @@
 #include "Quit.h"
 #include "Exception.h"
 
-#include <iostream>
 
 namespace mplay{
 

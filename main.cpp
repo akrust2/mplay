@@ -6,14 +6,23 @@
 #include "PrintPlayList.h"
 #include "Quit.h"
 #include "Help.h"
+#include "Random.h"
+#include "Repeat.h"
+#include "Next.h"
+#include "History.h"
 
 int main(int argc, char *argv[]){
 
     try{
-        
+        mplay::PlayList playList{};
+        mplay::History history{};
+
         mplay::ActionsHandler actions;
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::AddTrack(playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::PrintPlayList(playList)));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Random()));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Repeat()));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Next(history, playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Quit()));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Help(actions)));
 
