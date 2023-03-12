@@ -9,6 +9,7 @@
 #include "Random.h"
 #include "Repeat.h"
 #include "Next.h"
+#include "Previous.h"
 #include "History.h"
 
 int main(int argc, char *argv[]){
@@ -22,6 +23,7 @@ int main(int argc, char *argv[]){
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::PrintPlayList(playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Random()));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Repeat()));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Previous(history, playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Next(history, playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Quit()));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Help(actions)));
