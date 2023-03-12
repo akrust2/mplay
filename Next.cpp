@@ -31,6 +31,7 @@ void Next::perform(std::istream& args) {
         // Todo : handle random
         
 
+        // move history    
         if(trackIt != playList.end())
             history.push_back(trackIt);
     }
@@ -48,13 +49,19 @@ void Next::perform(std::istream& args) {
 
         trackIt = current;
 
+        // move history    
         if(trackIt != playList.end())
             history.push_back(trackIt);
     }
 
     // Handle repeat mode here
-    if(trackIt == playList.end() && Repeat::isRepeatModeActive())
+    if(trackIt == playList.end() && Repeat::isRepeatModeActive()){
         trackIt = playList.begin();
+        
+        // move history        
+        if(trackIt != playList.end())
+            history.push_back(trackIt);
+    }
 
     if(trackIt == playList.end())
         std::cout << "Reached the end of playList"<<std::endl;

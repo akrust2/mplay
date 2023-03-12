@@ -2,6 +2,11 @@
 #include "../PlayList.h"
 #include "../Track.h"
 #include "../AddTrack.h"
+#include "../Next.h"
+#include "../History.h"
+#include "../Random.h"
+#include "../Repeat.h"
+
 #include <sstream>
 
 
@@ -48,6 +53,53 @@ void testSuite::testAddTrack(){
     addAction.perform(iss);
     
     assert(std::distance(playList.begin(), playList.end()) == 1, "The playlist should contain 1 track",  __FUNCTION__);
+
+    std::cout << __FUNCTION__ << " succeeded"<<std::endl;
+
+}
+
+void testSuite::testNext(){
+    std::cout << "***************"<< std::endl<< "Running "<<__FUNCTION__ <<std::endl;
+
+    // make sure random is desactivated
+    if(mplay::Random::isRandomModeActive()){
+        std::istringstream iss("");
+        mplay::Random random;
+        random.perform(iss);
+    }
+         
+    // make sure repeat is desactivated
+    if(mplay::Repeat::isRepeatModeActive()){
+        std::istringstream iss("");
+        mplay::Repeat repeat;
+        repeat.perform(iss);
+    }
+
+    mplay::PlayList playList{};
+    mplay::History history{};
+    mplay::Next next(history, playList);
+
+    // next has no arguments
+    std::istringstream iss("");
+
+    // corner case: next on empty playlist should throw
+    bool hasThrown = false;
+    try{
+        next.perform(iss);
+    }
+    catch(...){
+        hasThrown = true;
+    }
+    assert(hasThrown, "Next on an empty playList should throw", __FUNCTION__);
+     
+    playList.push_back(mplay::Track{"track1", "codec1", 10});
+    playList.push_back(mplay::Track{"track2", "codec2", 100});
+    
+
+    // should select track2
+    next.perform(iss);
+
+    assert(history.current()->getTitle().compare("track2") == 0, "Next should have selected the second track in the playlist", __FUNCTION__);
 
     std::cout << __FUNCTION__ << " succeeded"<<std::endl;
 
