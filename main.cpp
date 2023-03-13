@@ -11,18 +11,27 @@
 #include "Next.h"
 #include "Previous.h"
 #include "History.h"
+#include "Play.h"
+#include "Pause.h"
+#include "Stop.h"
+#include "Player.h"
 
 int main(int argc, char *argv[]){
 
     try{
-        mplay::PlayList playList{};
-        mplay::History history{};
+        mplay::Player player;
+        mplay::PlayList& playList = player.getPlayList();
+        mplay::History& history = player.getHistory();
+
 
         mplay::ActionsHandler actions;
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::AddTrack(playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::PrintPlayList(playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Random()));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Repeat()));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Play(player)));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Pause(player)));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Stop(player)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Previous(history, playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Next(history, playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Quit()));

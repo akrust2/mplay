@@ -1,6 +1,6 @@
 CXX=g++
-CXXFLAGS=-W -Wall -std=c++2a -fconcepts -g -ggdb
-LDFLAGS=-lstdc++ 
+CXXFLAGS=-W -Wall -std=c++2a -fext-numeric-literals -g -ggdb
+LDFLAGS=-lstdc++ -lpthread
 EXEC=mplay
 SRC= $(wildcard *.cpp)
 OBJ= $(SRC:.cpp=.o)

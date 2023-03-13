@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include <string>
 #include <list>
+#include <mutex>
 
 namespace mplay{
 
@@ -44,7 +45,9 @@ public:
     Container::const_reverse_iterator crbegin() const;
     Container::const_reverse_iterator crend() const;
 
+
 private:
+    std::mutex mutex;
 
     Container trackList;
     

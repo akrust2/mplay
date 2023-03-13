@@ -1,6 +1,8 @@
 #include "History.h"
 #include "Exception.h"
 
+#include <mutex>
+
 namespace mplay{
 
 const std::size_t History::maxHistorySize = 100;
@@ -10,6 +12,14 @@ History::History():size(0), currentTrack(tracks.begin()){
 }
 
 void History::push_back(History::PlayedTrack track){
+    std::scoped_lock lock(mutex);
+
+    // loose the history after the currently played track
+    if(currentTrack != tracks.end()){       
+        tracks.erase(std::next(currentTrack), tracks.end());
+        size = tracks.size(); // update size
+    }
+
     tracks.push_back(track);
 
     // if the max size is reached, we drop the oldest element
@@ -24,6 +34,7 @@ void History::push_back(History::PlayedTrack track){
 }
 
 History::PlayedTrack History::current(){
+    std::scoped_lock lock(mutex);
     if(!hasCurrent())
         throw Exception("Current track undefined");
 
@@ -32,6 +43,7 @@ History::PlayedTrack History::current(){
 
 
 History::PlayedTrack History::previous(){
+    std::scoped_lock lock(mutex);
     if(!hasPrevious())
         throw Exception("Previous from History cannot be called if the current track is already at the begining of history");
 
@@ -39,6 +51,7 @@ History::PlayedTrack History::previous(){
 }
 
 History::PlayedTrack History::next(){
+    std::scoped_lock lock(mutex);
     if(!hasNext())
         throw Exception("Next from History should not be called if the current track is already at the end of history");
 
@@ -59,6 +72,8 @@ bool History::hasNext() const{
 
 // called to loose history
 void History::invalidate(){
+
+    std::scoped_lock lock(mutex);
     size = 0;
     tracks.clear();
     currentTrack = tracks.begin();

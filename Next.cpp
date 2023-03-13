@@ -16,6 +16,11 @@ Next::Next(History& history, PlayList& playlist):history(history), playList(play
 // except the action keyword at the time perform is called
 void Next::perform(std::istream& args) {
 
+    perform();
+}
+
+void Next::perform(){
+
     if(playList.begin() == playList.end())
         throw Exception("The playlist is empty");
 
@@ -67,6 +72,7 @@ void Next::perform(std::istream& args) {
         std::cout << "Reached the end of playList"<<std::endl;
     else
         std::cout << "Current track is :"<<std::endl<< *trackIt;
+
 }
 
 const std::string & Next::help() const {

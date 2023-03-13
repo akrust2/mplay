@@ -3,6 +3,7 @@
 
 #include "PlayList.h"
 #include <list>
+#include <mutex>
 
 namespace mplay{
 
@@ -29,7 +30,9 @@ public:
     // called to loose history
     void invalidate();
 
+
 private:
+    std::mutex mutex;
 
     std::list<PlayedTrack> tracks;
 

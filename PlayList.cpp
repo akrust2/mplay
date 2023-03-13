@@ -1,6 +1,6 @@
 #include "PlayList.h"
 #include "Track.h"
-
+#include <mutex>
 
 namespace mplay{
 
@@ -9,27 +9,31 @@ PlayList::PlayList(std::initializer_list<Track> l): trackList(l){
 }
 
 void PlayList::push_back(const Track& track){
+    std::scoped_lock lock(mutex);
+
     trackList.push_back(track);
 }
 
 void PlayList::push_back(const Track&& track){
+    std::scoped_lock lock(mutex);
+
     trackList.push_back(track);
 }
 
 void PlayList::remove(const Track& track){
-
+    std::scoped_lock lock(mutex);
 }
 
 void PlayList::removeByTitle(const std::string& title){
-
+    std::scoped_lock lock(mutex);
 }
 
 void PlayList::removeByPosition(std::size_t position){
-
+    std::scoped_lock lock(mutex);
 }
     
 void PlayList::removeDuplicates(){
-
+    std::scoped_lock lock(mutex);
 }
 
 PlayList::Container::iterator PlayList::begin(){

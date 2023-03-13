@@ -1,21 +1,20 @@
-#ifndef Next_H
-#define Next_H
+#ifndef Stop_h
+#define Stop_h
 
 #include "ActionBase.h"
 
 namespace mplay{
 
-class History;
-class PlayList;
+class Player;
 
-class Next : public ActionBase{
+class Stop : public ActionBase{
 public:
-    Next(History& history, PlayList& playlist);
+
+    Stop(Player& player);
 
     // assume the stringstream contains the commad line, 
     // except the action keyword at the time perform is called
     virtual void perform(std::istream& args) override;
-    void perform();
 
     virtual const std::string & help() const override;
 
@@ -23,10 +22,9 @@ public:
 
 private:
 
-    History& history;
-    PlayList& playList; 
+    Player& player;
 };
 
-
 }
+
 #endif
