@@ -7,7 +7,8 @@ namespace mplay{
 
 class Stoped : public State{
 public:
-    
+    void accept(StateVisitor& visitor) override;
+
 
 };
 

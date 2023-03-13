@@ -46,7 +46,7 @@ void Next::perform(){
         // if nothing in the history, start at the first track of the playList
         PlayList::Container::iterator current = playList.begin();
         if(history.hasCurrent())
-            history.current();
+            current = history.current();
 
         if(current != playList.end())
             current++;
@@ -69,9 +69,9 @@ void Next::perform(){
     }
 
     if(trackIt == playList.end())
-        std::cout << "Reached the end of playList"<<std::endl;
+        throw Exception("Reached the end of playList");
     else
-        std::cout << "Current track is :"<<std::endl<< *trackIt;
+        std::cout << "Current track is :"<<std::endl<< trackIt->getTitle()<<std::endl;
 
 }
 

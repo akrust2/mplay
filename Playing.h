@@ -8,6 +8,7 @@
 
 namespace mplay{
 
+class Stoped;
 class Paused;
 class History;
 struct PauseToken;
@@ -15,12 +16,14 @@ struct PauseToken;
 class Playing : public State{
 public:
 
-    Playing(State& previousState, History& history, PlayList& playlist);
+    Playing(Stoped& previousState, History& history, PlayList& playlist);
     Playing(Paused& previousState, History& history, PlayList& playlist);
 
     ~Playing();
 
     std::shared_ptr<PauseToken> sharePause();
+
+    void accept(StateVisitor& visitor) override;
 
 private:
 

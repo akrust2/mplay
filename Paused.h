@@ -13,11 +13,12 @@ struct PauseToken;
 class Paused : public State{
 public:
 
-    Paused(State& state);
     Paused(Playing& playing);
 
     Track::LengthType currentTime() const;
 
+    void accept(StateVisitor& visitor) override;
+ 
 private:
 
     std::shared_ptr<PauseToken> pauseToken;

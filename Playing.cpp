@@ -1,15 +1,18 @@
 #include "Playing.h"
 #include "PauseToken.h"
+#include "Stoped.h"
 #include "Paused.h"
 #include "History.h"
 #include "PlayList.h"
 #include "Exception.h"
 #include "Next.h"
+#include "StateVisitor.h"
+
 
 #include <chrono>
 namespace mplay{
 
-Playing::Playing(State& previousState, History& history, PlayList& playlist): pauseToken(new PauseToken{0}), history(history), playlist(playlist), keepPlaying(true){
+Playing::Playing(Stoped& previousState, History& history, PlayList& playlist): pauseToken(new PauseToken{0}), history(history), playlist(playlist), keepPlaying(true){
 
     PlayList::Container::iterator track = playlist.begin();
     if(history.hasCurrent())
@@ -95,6 +98,9 @@ std::shared_ptr<PauseToken> Playing::sharePause(){
 }
 
 
+void Playing::accept(StateVisitor& visitor) {
+    visitor.visitPlaying(*this);
+}
 
 
 
