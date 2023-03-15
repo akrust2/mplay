@@ -43,11 +43,13 @@ public:
     Container::const_reverse_iterator crbegin() const;
     Container::const_reverse_iterator crend() const;
 
+    std::size_t size() const;
 
 private:
     std::mutex mutex;
 
     Container trackList;
+    std::size_t s; // cache the size
     
 
 };

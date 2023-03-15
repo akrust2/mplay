@@ -6,10 +6,14 @@
 #include "Track.h"
 #include "Exception.h"
 
+#include <ctime>
+#include <cstdlib>
+
 namespace mplay {
 
 Next::Next(History& history, PlayList& playlist):history(history), playList(playlist){
 
+    std::srand(std::time(nullptr));
 }
 
 // assume the stringstream contains the commad line, 
@@ -33,9 +37,16 @@ void Next::perform(){
     // second, if random mode is active, find a next tack randomly
     else if(Random::isRandomModeActive()){
 
-        // Todo : handle random
+        do{
+            std::size_t rndpos = RAND_MAX;
+            while(rndpos >= playList.size()){
+                rndpos = std::rand()/((RAND_MAX + 1u)/playList.size());
+                std::cout << rndpos <<std::endl;
+            }       
+            trackIt = playList.begin();
+            std::advance(trackIt, rndpos);
+        }while(history.hasCurrent() && trackIt == history.current())    
         
-
         // move history    
         if(trackIt != playList.end())
             history.push_back(trackIt);

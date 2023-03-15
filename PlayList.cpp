@@ -7,19 +7,21 @@
 namespace mplay{
 
 PlayList::PlayList(std::initializer_list<Track> l): trackList(l){
-
+    s = trackList.size();
 }
 
 void PlayList::push_back(const Track& track){
     std::scoped_lock lock(mutex);
 
     trackList.push_back(track);
+    s++;
 }
 
 void PlayList::push_back(const Track&& track){
     std::scoped_lock lock(mutex);
 
     trackList.push_back(track);
+    s++;
 }
 
 
@@ -29,7 +31,10 @@ PlayList::Container::iterator PlayList::find(const std::string& title){
 }
 void PlayList::erase(Container::iterator track){
     std::scoped_lock lock(mutex);
+    if(track != trackList.end())
+        s--;    
     trackList.erase(track);
+    
 }
 
 
@@ -46,8 +51,10 @@ void PlayList::removeDuplicates(){
             toBeErased.push_back(it);
     }
 
-    for(auto it : toBeErased)
+    for(auto it : toBeErased){
         trackList.erase(it);
+        s--;
+    }
 }
 
 PlayList::Container::iterator PlayList::begin(){
@@ -96,6 +103,11 @@ PlayList::Container::const_reverse_iterator PlayList::rbegin() const{
 
 PlayList::Container::const_reverse_iterator PlayList::rend() const{
     return trackList.crend();
+}
+
+
+std::size_t PlayList::size() const{
+    return s;
 }
 
 }
