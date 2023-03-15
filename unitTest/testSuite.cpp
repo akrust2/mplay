@@ -6,6 +6,7 @@
 #include "../History.h"
 #include "../Random.h"
 #include "../Repeat.h"
+#include "../Player.h"
 
 #include <sstream>
 
@@ -75,9 +76,10 @@ void testSuite::testNext(){
         repeat.perform(iss);
     }
 
-    mplay::PlayList playList{};
-    mplay::History history{};
-    mplay::Next next(history, playList);
+    mplay::Player player;
+    mplay::PlayList& playList = player.getPlayList();
+    mplay::History& history = player.getHistory();
+    mplay::Next next(player);
 
     // next has no arguments
     std::istringstream iss("");

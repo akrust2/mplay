@@ -1,6 +1,6 @@
 CXX=g++
 CXXFLAGS=-W -Wall -std=c++2a 
-LDFLAGS=-lstdc++ 
+LDFLAGS=-lstdc++ -lpthread
 EXEC=tests
 SRC= $(wildcard *.cpp)
 OBJ= $(SRC:.cpp=.o)
