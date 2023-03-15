@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Pause(player)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Stop(player)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Previous(history, playList)));
-        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Next(history, playList)));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Next(player)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Quit()));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Help(actions)));
 

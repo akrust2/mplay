@@ -5,12 +5,11 @@
 
 namespace mplay{
 
-class History;
-class PlayList;
+class Player;
 
 class Next : public ActionBase{
 public:
-    Next(History& history, PlayList& playlist);
+    Next(Player& player);
 
     // assume the stringstream contains the commad line, 
     // except the action keyword at the time perform is called
@@ -23,8 +22,7 @@ public:
 
 private:
 
-    History& history;
-    PlayList& playList; 
+    Player& player;    
 };
 
 

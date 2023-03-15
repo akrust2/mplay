@@ -10,7 +10,7 @@
 
 namespace mplay{
 
-Player::Player():history{}, playlist{}, forceJoin(false){
+Player::Player():history{}, playlist{}, forceJoin(false), playPending(false){
 
     using namespace std::chrono_literals;
 
@@ -20,7 +20,8 @@ Player::Player():history{}, playlist{}, forceJoin(false){
             while(!forceJoin){
                 if(stopPending)
                     stop();
-
+                else if(playPending)
+                    play();
                std::this_thread::sleep_for(200ms);
             }
         }
@@ -67,6 +68,8 @@ void Player::pause(){
 void Player::play(){
     assert(state);
 
+    playPending = false;
+
     // This visitor changes the state to playing if it was either paused or stoped
     struct PlayVisitor : public StateVisitor{
 
@@ -77,10 +80,11 @@ void Player::play(){
                 state.reset(new Playing(paused, player));
         }
         
-        void visitStoped(Stoped& stoped) override{
+        void visit(State& stoped) override{
              if(state)
-                state.reset(new Playing(stoped, player));
+                state.reset(new Playing(player));
         }
+
         // ref, so reset affects caller
         std::shared_ptr<State>& state;
         Player& player;
@@ -91,6 +95,26 @@ void Player::play(){
     std::scoped_lock lock(m);
     state->accept(visitor);
 }
+
+bool Player::isPlaying(){
+    struct PlayingVisitor : public StateVisitor{
+
+        PlayingVisitor(): isPlaying(false){}
+
+        void visitPlaying(Playing& playing) override{
+             isPlaying = true;
+        }
+
+        bool isPlaying;
+    };
+
+    PlayingVisitor visitor;
+    std::scoped_lock lock(m);
+    state->accept(visitor);
+
+    return visitor.isPlaying;
+}
+
 
 History& Player::getHistory(){
     return history;
@@ -105,6 +129,10 @@ void Player::stopDelayed(){
 
     // this flag will be read by the watcher thread
     stopPending = true;
+}
+
+void Player::playDelayed(){
+    playPending = true;
 }
 
 

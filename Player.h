@@ -26,8 +26,12 @@ public:
     History& getHistory();
     PlayList& getPlayList();
 
-    // call that when you need to move to stop state indide another state
+    // call that when you need to move to stop state inside another state
     void stopDelayed();
+    void playDelayed();
+
+    bool isPlaying();
+
 
 private:
 
@@ -35,10 +39,11 @@ private:
     History history;
     PlayList playlist;
 
-    // thread used to force stop 
+    // thread used to stop / play from the playing thread
     std::unique_ptr<std::thread> watcherThread;
     bool stopPending;
-    // used to stop the thread
+    bool playPending;
+
     // can be removed if we switch to jthread
     bool forceJoin;
     std::mutex m;

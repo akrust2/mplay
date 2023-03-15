@@ -5,13 +5,14 @@
 #include "Repeat.h"
 #include "Track.h"
 #include "Exception.h"
+#include "Player.h"
 
 #include <ctime>
 #include <cstdlib>
 
 namespace mplay {
 
-Next::Next(History& history, PlayList& playlist):history(history), playList(playlist){
+Next::Next(Player& player):player(player){
 
     std::srand(std::time(nullptr));
 }
@@ -24,6 +25,9 @@ void Next::perform(std::istream& args) {
 }
 
 void Next::perform(){
+
+    History& history = player.getHistory();
+    PlayList& playList = player.getPlayList();
 
     if(playList.begin() == playList.end())
         throw Exception("The playlist is empty");
@@ -45,7 +49,7 @@ void Next::perform(){
             }       
             trackIt = playList.begin();
             std::advance(trackIt, rndpos);
-        }while(history.hasCurrent() && trackIt == history.current())    
+        }while(history.hasCurrent() && trackIt == history.current());  
         
         // move history    
         if(trackIt != playList.end())
@@ -81,9 +85,12 @@ void Next::perform(){
 
     if(trackIt == playList.end())
         throw Exception("Reached the end of playList");
-    else
+    else{
+        if(player.isPlaying())
+            player.playDelayed();
         std::cout << "Current track is :"<<std::endl<< trackIt->getTitle()<<std::endl;
 
+    }
 }
 
 const std::string & Next::help() const {

@@ -13,7 +13,7 @@
 #include <chrono>
 namespace mplay{
 
-Playing::Playing(Stoped& previousState,Player& player): pauseToken(new PauseToken{0}), player(player), keepPlaying(true){
+Playing::Playing(Player& player): pauseToken(new PauseToken{0}), player(player), keepPlaying(true){
 
     History& history = player.getHistory();
     PlayList& playlist = player.getPlayList();
@@ -69,36 +69,33 @@ void Playing::doPlay(PlayList::Container::iterator track){
 
        PlayList::Container::iterator trackIt(track);
 
-       while(trackIt != playlist.end()){
-
-           std::cout << "Start playing track "<< trackIt->getTitle()<<std::endl;
+       std::cout << "Start playing track "<< trackIt->getTitle()<<std::endl;
+          
+       for(;pauseToken->currentTime < trackIt->getLenth(); pauseToken->currentTime++){
             
-           for(;pauseToken->currentTime < trackIt->getLenth(); pauseToken->currentTime++){
-             
-               if(!keepPlaying)
-                   return;
+           if(!keepPlaying)
+               return;
  
-               // Fake play
-               std::this_thread::sleep_for(1s);
-           }               
-           std::cout << "Finished playing track "<<trackIt->getTitle()<<std::endl;
+           // Fake play
+           std::this_thread::sleep_for(1s);
+       }               
+       std::cout << "Finished playing track "<<trackIt->getTitle()<<std::endl;
                                 
-           pauseToken->currentTime = 0;
+       pauseToken->currentTime = 0;
 
-           Next next(history, playlist);
+       Next next(player);
 
-           try{
-               next.perform();  
-               trackIt = history.current();     
-           }
-           catch(Exception& e){
-               // end playing and return to stoped state
-               // Do not call stop() directly, else it would crash the software with a Deadlock avoided exception
-               player.stopDelayed();
-               return;              
-           }
-
+       try{
+           // start a new play
+           next.perform();   
        }
+       catch(Exception& e){
+           // end playing and return to stoped state
+           // Do not call stop() directly, else it would crash the software with a Deadlock avoided exception
+           player.stopDelayed();
+           return;              
+       }
+
     }
     ));
 }

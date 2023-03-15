@@ -16,7 +16,7 @@ struct PauseToken;
 class Playing : public State{
 public:
 
-    Playing(Stoped& previousState, Player& player);
+    Playing(Player& player);
     Playing(Paused& previousState, Player& player);
 
     ~Playing();
