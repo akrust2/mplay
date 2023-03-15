@@ -15,6 +15,8 @@
 #include "Pause.h"
 #include "Stop.h"
 #include "Player.h"
+#include "RemoveTrack.h"
+#include "RemoveDuplicates.h"
 
 int main(int argc, char *argv[]){
 
@@ -26,6 +28,8 @@ int main(int argc, char *argv[]){
 
         mplay::ActionsHandler actions;
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::AddTrack(playList)));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::RemoveTrack(playList, history)));
+        actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::RemoveDuplicates(playList, history)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::PrintPlayList(playList)));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Random()));
         actions.registerAction(std::shared_ptr<mplay::ActionBase>(new mplay::Repeat()));

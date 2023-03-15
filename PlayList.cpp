@@ -1,6 +1,8 @@
 #include "PlayList.h"
 #include "Track.h"
 #include <mutex>
+#include <vector>
+#include <set>
 
 namespace mplay{
 
@@ -20,20 +22,32 @@ void PlayList::push_back(const Track&& track){
     trackList.push_back(track);
 }
 
-void PlayList::remove(const Track& track){
+
+PlayList::Container::iterator PlayList::find(const std::string& title){
+
+    return std::find_if(begin(), end(), [&title](const Track& track){return !track.getTitle().compare(title);});
+}
+void PlayList::erase(Container::iterator track){
     std::scoped_lock lock(mutex);
+    trackList.erase(track);
 }
 
-void PlayList::removeByTitle(const std::string& title){
-    std::scoped_lock lock(mutex);
-}
 
-void PlayList::removeByPosition(std::size_t position){
-    std::scoped_lock lock(mutex);
-}
-    
+//Remove duplicates based on title    
 void PlayList::removeDuplicates(){
     std::scoped_lock lock(mutex);
+    std::vector<Container::iterator> toBeErased;
+
+    // If a string is already present in the set, it means it is a duplicate and needs to be remove
+    std::set<std::string> set;
+    for(auto it = begin(); it != end(); ++it){
+        auto inserted = set.insert(it->getTitle());
+        if(!inserted.second)
+            toBeErased.push_back(it);
+    }
+
+    for(auto it : toBeErased)
+        trackList.erase(it);
 }
 
 PlayList::Container::iterator PlayList::begin(){

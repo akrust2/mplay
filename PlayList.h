@@ -21,10 +21,8 @@ public:
     void push_back(const Track& track);
     void push_back(const Track&& track);
 
-    void remove(const Track& track);
-    void removeByTitle(const std::string& title);
-    void removeByPosition(std::size_t position);
-    
+    Container::iterator find(const std::string& title);
+    void erase(Container::iterator track);
     void removeDuplicates();
 
     Container::iterator begin();
