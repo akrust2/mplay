@@ -7,12 +7,16 @@
 #include "Exception.h"
 #include "Next.h"
 #include "StateVisitor.h"
+#include "Player.h"
 
 
 #include <chrono>
 namespace mplay{
 
-Playing::Playing(Stoped& previousState, History& history, PlayList& playlist): pauseToken(new PauseToken{0}), history(history), playlist(playlist), keepPlaying(true){
+Playing::Playing(Stoped& previousState,Player& player): pauseToken(new PauseToken{0}), player(player), keepPlaying(true){
+
+    History& history = player.getHistory();
+    PlayList& playlist = player.getPlayList();
 
     PlayList::Container::iterator track = playlist.begin();
     if(history.hasCurrent())
@@ -26,7 +30,10 @@ Playing::Playing(Stoped& previousState, History& history, PlayList& playlist): p
 
 }
 
-Playing::Playing(Paused& previousState, History& history, PlayList& playlist): pauseToken(new PauseToken{previousState.currentTime()}), history(history), playlist(playlist), keepPlaying(true){
+Playing::Playing(Paused& previousState,Player& player): pauseToken(new PauseToken{previousState.currentTime()}), player(player), keepPlaying(true){
+
+    History& history = player.getHistory();
+    PlayList& playlist = player.getPlayList();
 
     PlayList::Container::iterator track = playlist.begin();
     if(history.hasCurrent())
@@ -57,6 +64,9 @@ void Playing::doPlay(PlayList::Container::iterator track){
     playingThread.reset(new std::thread(
         [&, track/* capture by value because the object is deleted at end of scope*/](){
 
+       History& history = player.getHistory();
+       PlayList& playlist = player.getPlayList();
+
        PlayList::Container::iterator trackIt(track);
 
        while(trackIt != playlist.end()){
@@ -75,7 +85,6 @@ void Playing::doPlay(PlayList::Container::iterator track){
                                 
            pauseToken->currentTime = 0;
 
-
            Next next(history, playlist);
 
            try{
@@ -83,7 +92,10 @@ void Playing::doPlay(PlayList::Container::iterator track){
                trackIt = history.current();     
            }
            catch(Exception& e){
-               return; // nothing to do, reached end of playList               
+               // end playing and return to stoped state
+               // Do not call stop() directly, else it would crash the software with a Deadlock avoided exception
+               player.stopDelayed();
+               return;              
            }
 
        }

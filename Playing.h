@@ -10,14 +10,14 @@ namespace mplay{
 
 class Stoped;
 class Paused;
-class History;
+class Player;
 struct PauseToken;
 
 class Playing : public State{
 public:
 
-    Playing(Stoped& previousState, History& history, PlayList& playlist);
-    Playing(Paused& previousState, History& history, PlayList& playlist);
+    Playing(Stoped& previousState, Player& player);
+    Playing(Paused& previousState, Player& player);
 
     ~Playing();
 
@@ -32,8 +32,7 @@ private:
     std::shared_ptr<PauseToken> pauseToken;
     std::unique_ptr<std::thread> playingThread;
 
-    History& history;
-    PlayList& playlist;
+    Player& player;
 
     // used to stop the thread
     // can be removed if we switch to jthread
